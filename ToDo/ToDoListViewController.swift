@@ -15,13 +15,13 @@ class ToDoListViewController: UITableViewController {
     var alertTimer: Timer?
     var remainingTime = 0
     var array: [String ] = ["Apple", "Banna", "Lemon", "Watermelon", "Orange", "Citrus", "Granate"]
-    let deafults = UserDefaults.standard
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-        if let items = deafults.array(forKey: "ToDoListArray") as? [String] {
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
             
             array = items
             
@@ -69,9 +69,10 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        removedItem(item: array[indexPath.row])
+
+        addedOrRemovedItem(titleText: "Successed Removed Item", messageText: array[indexPath.row])
         array.remove(at: indexPath.row)
-        self.deafults.set(self.array, forKey: "ToDoListArray")
+        self.defaults.set(self.array, forKey: "ToDoListArray")
         tableView.reloadData()
         
     }
@@ -97,9 +98,9 @@ class ToDoListViewController: UITableViewController {
         let addAction = UIAlertAction(title: "Add", style: .default) { (_) in
             
             self.array.append(toDoField.text!)
-            self.deafults.set(self.array, forKey: "ToDoListArray")
+            self.defaults.set(self.array, forKey: "ToDoListArray")
             self.tableView.reloadData()
-            addedItem()
+            self.addedOrRemovedItem(titleText: "Successed Added Item", messageText: toDoField.text!)
             
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -129,22 +130,15 @@ class ToDoListViewController: UITableViewController {
         }
         present(alertController, animated: true, completion: nil)
         
-        func addedItem() {
-            
-            let addedItem = UIAlertController(title: "Successed Added Item", message: "\(toDoField.text!)", preferredStyle: .alert)
-            self.present(addedItem, animated: true, completion: nil)
-            self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: true)
-            
-            
-        }
-        
-    }
+}
+
     
-    func removedItem(item: String) {
+    func addedOrRemovedItem(titleText: String, messageText: String) {
         
-        let removedItem = UIAlertController(title: "Successed Removed Item", message: "\(item)", preferredStyle: .alert)
-        self.present(removedItem, animated: true, completion: nil)
+        let addedOrRemovedItem = UIAlertController(title: titleText, message: messageText, preferredStyle: .alert)
+        self.present(addedOrRemovedItem, animated: true, completion: nil)
         self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: true)
+        
         
     }
     

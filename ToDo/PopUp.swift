@@ -84,3 +84,20 @@ import UIKit
 //
 //
 
+//        func addedItem(titleText: String, messageText: String) {
+//
+//            let addedItem = UIAlertController(title: "Successed Added Item", message: "\(toDoField.text!)", preferredStyle: .alert)
+//            self.present(addedItem, animated: true, completion: nil)
+//            self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: true)
+//
+//
+//        }
+
+
+//    func removedItem(item: String) {
+//
+//        let removedItem = UIAlertController(title: "Successed Removed Item", message: "\(item)", preferredStyle: .alert)
+//        self.present(removedItem, animated: true, completion: nil)
+//        self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: true)
+//
+//    }
