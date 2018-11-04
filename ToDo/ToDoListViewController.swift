@@ -15,9 +15,17 @@ class ToDoListViewController: UITableViewController {
     var alertTimer: Timer?
     var remainingTime = 0
     var array: [String ] = ["Apple", "Banna", "Lemon", "Watermelon", "Orange", "Citrus", "Granate"]
+    let deafults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        if let items = deafults.array(forKey: "ToDoListArray") as? [String] {
+            
+            array = items
+            
+        }
         
         
         // Do any additional setup after loading the view, typically from a nib.
@@ -63,7 +71,7 @@ class ToDoListViewController: UITableViewController {
         
         removedItem(item: array[indexPath.row])
         array.remove(at: indexPath.row)
-        
+        self.deafults.set(self.array, forKey: "ToDoListArray")
         tableView.reloadData()
         
     }
@@ -89,6 +97,7 @@ class ToDoListViewController: UITableViewController {
         let addAction = UIAlertAction(title: "Add", style: .default) { (_) in
             
             self.array.append(toDoField.text!)
+            self.deafults.set(self.array, forKey: "ToDoListArray")
             self.tableView.reloadData()
             addedItem()
             
