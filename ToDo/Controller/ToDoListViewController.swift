@@ -22,7 +22,7 @@ class ToDoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(dataFilePath)
+        print(dataFilePath!)
         
         loadItems()
         
