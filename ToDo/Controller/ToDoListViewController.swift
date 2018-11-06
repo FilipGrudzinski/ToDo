@@ -180,9 +180,10 @@ class ToDoListViewController: UITableViewController {
         
     }
     
-    func loadItems() {
+    // Function "with" internal and external argument and after "=" we have default argument
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
 
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        //let request: NSFetchRequest<Item> = Item.fetchRequest()
         
         do {
             
@@ -206,27 +207,11 @@ extension ToDoListViewController: UISearchBarDelegate {
         
        let request: NSFetchRequest<Item> = Item.fetchRequest()
         
-       let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+       request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
-       request.predicate = predicate
+       request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-       let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
-        
-       request.sortDescriptors = [sortDescriptor]
-        
-        do {
-            
-            array = try context.fetch(request)
-            
-        } catch {
-            
-            print(error)
-            
-        }
-        
-        
-       tableView.reloadData()
-        
+       loadItems(with: request)
         
     }
     
