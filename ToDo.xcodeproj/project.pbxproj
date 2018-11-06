@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		147E592C218F8A70004ACD8D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147E592B218F8A70004ACD8D /* Item.swift */; };
 		1494861F2182FD2200B2583F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1494861E2182FD2200B2583F /* AppDelegate.swift */; };
 		149486212182FD2200B2583F /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149486202182FD2200B2583F /* ToDoListViewController.swift */; };
 		149486242182FD2200B2583F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 149486222182FD2200B2583F /* Main.storyboard */; };
 		149486262182FD2400B2583F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 149486252182FD2400B2583F /* Assets.xcassets */; };
 		149486292182FD2400B2583F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 149486272182FD2400B2583F /* LaunchScreen.storyboard */; };
 		149486312183C8B700B2583F /* PopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149486302183C8B700B2583F /* PopUp.swift */; };
+		14E6212F21920E8900393927 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 14E6212D21920E8900393927 /* DataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		147E592B218F8A70004ACD8D /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		1494861B2182FD2200B2583F /* ToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1494861E2182FD2200B2583F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		149486202182FD2200B2583F /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
@@ -26,6 +25,7 @@
 		149486282182FD2400B2583F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1494862A2182FD2400B2583F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		149486302183C8B700B2583F /* PopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUp.swift; sourceTree = "<group>"; };
+		14E6212E21920E8900393927 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +59,7 @@
 		147E592A218F89E2004ACD8D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				147E592B218F8A70004ACD8D /* Item.swift */,
+				14E6212D21920E8900393927 /* DataModel.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -173,7 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				147E592C218F8A70004ACD8D /* Item.swift in Sources */,
+				14E6212F21920E8900393927 /* DataModel.xcdatamodeld in Sources */,
 				149486212182FD2200B2583F /* ToDoListViewController.swift in Sources */,
 				149486312183C8B700B2583F /* PopUp.swift in Sources */,
 				1494861F2182FD2200B2583F /* AppDelegate.swift in Sources */,
@@ -376,6 +376,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		14E6212D21920E8900393927 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				14E6212E21920E8900393927 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 14E6212E21920E8900393927 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 149486132182FD2200B2583F /* Project object */;
 }
