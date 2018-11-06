@@ -17,14 +17,14 @@ class ToDoListViewController: UITableViewController {
     var remainingTime = 0
     var array = [Item]()
     //let defaults = UserDefaults.standard
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    //let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(dataFilePath!)
+        //print(dataFilePath!)
         
         loadItems()
         
@@ -53,8 +53,8 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let name = array[indexPath.row]
-        print(name.title!)
+//        let name = array[indexPath.row]
+//        print(name.title!)
         
         array[indexPath.row].done = !array[indexPath.row].done
         
@@ -70,7 +70,7 @@ class ToDoListViewController: UITableViewController {
 
         addedOrRemovedItem(titleText: "Successed Removed Item", messageText: array[indexPath.row].title!)
 
-        context.delete(array[indexPath.row])
+        context.delete(array[indexPath.row]) // Must be first bacause when we remove from array We don't have that row to remove from coredata
         array.remove(at: indexPath.row)
         //self.defaults.set(self.array, forKey: "ToDoListArray")
         saveItems()
@@ -181,6 +181,7 @@ class ToDoListViewController: UITableViewController {
     }
     
     // Function "with" internal and external argument and after "=" we have default argument
+    //Item.fetchRequest()) is Item fetch - entity from coreData
     func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
 
         //let request: NSFetchRequest<Item> = Item.fetchRequest()
@@ -212,6 +213,22 @@ extension ToDoListViewController: UISearchBarDelegate {
        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
        loadItems(with: request)
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchBar.text?.count == 0 {
+            
+            loadItems()
+            
+            DispatchQueue.main.async {
+                
+                searchBar.resignFirstResponder()
+                
+            }
+            
+        }
         
     }
     
