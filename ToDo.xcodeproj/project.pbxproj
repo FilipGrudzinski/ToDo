@@ -14,6 +14,7 @@
 		149486292182FD2400B2583F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 149486272182FD2400B2583F /* LaunchScreen.storyboard */; };
 		149486312183C8B700B2583F /* PopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149486302183C8B700B2583F /* PopUp.swift */; };
 		14E6212F21920E8900393927 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 14E6212D21920E8900393927 /* DataModel.xcdatamodeld */; };
+		14E62152219245E600393927 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E62151219245E600393927 /* CategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		1494862A2182FD2400B2583F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		149486302183C8B700B2583F /* PopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUp.swift; sourceTree = "<group>"; };
 		14E6212E21920E8900393927 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		14E62151219245E600393927 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +44,7 @@
 		147E5928218F89DD004ACD8D /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				1494861E2182FD2200B2583F /* AppDelegate.swift */,
+				14E62151219245E600393927 /* CategoryViewController.swift */,
 				149486202182FD2200B2583F /* ToDoListViewController.swift */,
 			);
 			path = Controller;
@@ -92,6 +94,7 @@
 		1494861D2182FD2200B2583F /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
+				1494861E2182FD2200B2583F /* AppDelegate.swift */,
 				147E592A218F89E2004ACD8D /* Model */,
 				147E5929218F89E0004ACD8D /* View */,
 				147E5928218F89DD004ACD8D /* Controller */,
@@ -173,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14E62152219245E600393927 /* CategoryViewController.swift in Sources */,
 				14E6212F21920E8900393927 /* DataModel.xcdatamodeld in Sources */,
 				149486212182FD2200B2583F /* ToDoListViewController.swift in Sources */,
 				149486312183C8B700B2583F /* PopUp.swift in Sources */,
