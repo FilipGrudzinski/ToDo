@@ -14,17 +14,22 @@ class ToDoListViewController: UITableViewController {
     
     var alertTimer: Timer?
     var remainingTime = 0
-    var array: [String ] = ["Apple", "Banna", "Lemon", "Watermelon", "Orange", "Citrus", "Granate"]
+    var array = [Item]()
     let defaults = UserDefaults.standard
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let firstItem = Item()
+        firstItem.title = "Apple"
+        array.append(firstItem)
         
-        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
-            
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [Item] {
+
             array = items
-            
+
         }
         
         
@@ -41,7 +46,12 @@ class ToDoListViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell" , for: indexPath)
         
-        cell.textLabel?.text = array[indexPath.row]
+        cell.textLabel?.text = array[indexPath.row].title
+        
+        // Ternary operator
+        // value = condition ? valueIfTrue : valueIfFalse
+        
+        cell.accessoryType = array[indexPath.row].done ? .checkmark : .none
         
         return cell
     }
@@ -52,15 +62,9 @@ class ToDoListViewController: UITableViewController {
         let name = array[indexPath.row]
         print(name)
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            
-        } else {
-            
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            
-        }
+        array[indexPath.row].done = !array[indexPath.row].done
+        
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -70,7 +74,7 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
 
-        addedOrRemovedItem(titleText: "Successed Removed Item", messageText: array[indexPath.row])
+        addedOrRemovedItem(titleText: "Successed Removed Item", messageText: array[indexPath.row].title)
         array.remove(at: indexPath.row)
         self.defaults.set(self.array, forKey: "ToDoListArray")
         tableView.reloadData()
@@ -97,7 +101,10 @@ class ToDoListViewController: UITableViewController {
         // Create an OK Button
         let addAction = UIAlertAction(title: "Add", style: .default) { (_) in
             
-            self.array.append(toDoField.text!)
+            let newItem = Item()
+            newItem.title = toDoField.text!
+            
+            self.array.append(newItem)
             self.defaults.set(self.array, forKey: "ToDoListArray")
             self.tableView.reloadData()
             self.addedOrRemovedItem(titleText: "Successed Added Item", messageText: toDoField.text!)
