@@ -53,10 +53,7 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        let name = array[indexPath.row]
-//        print(name.title!)
-        
-        array[indexPath.row].done = !array[indexPath.row].done
+        array[indexPath.row].done = !array[indexPath.row].done  //Reverse boolean
         
         saveItems()
         
@@ -71,8 +68,9 @@ class ToDoListViewController: UITableViewController {
         addedOrRemovedItem(titleText: "Successed Removed Item", messageText: array[indexPath.row].title!)
 
         context.delete(array[indexPath.row]) // Must be first bacause when we remove from array We don't have that row to remove from coredata
+        
         array.remove(at: indexPath.row)
-        //self.defaults.set(self.array, forKey: "ToDoListArray")
+        
         saveItems()
         
     }
@@ -82,8 +80,6 @@ class ToDoListViewController: UITableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         pop()
-        
-        //testAlert()
         
     }
     
@@ -100,15 +96,12 @@ class ToDoListViewController: UITableViewController {
            
             let newItem = Item(context: self.context)
             
-            //let newItem = Items()
             newItem.title = toDoField.text!
             newItem.done = false
             
             self.array.append(newItem)
             
             self.saveItems()
-            
-            //self.defaults.set(self.array, forKey: "ToDoListArray")
             
             self.addedOrRemovedItem(titleText: "Successed Added Item", messageText: toDoField.text!)
             
@@ -208,7 +201,8 @@ extension ToDoListViewController: UISearchBarDelegate {
         
        let request: NSFetchRequest<Item> = Item.fetchRequest()
         
-       request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+       request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ means take from searchbar text
+        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
         
        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
