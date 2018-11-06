@@ -14,26 +14,18 @@ class ToDoListViewController: UITableViewController {
     
     var alertTimer: Timer?
     var remainingTime = 0
-    var array = [Item]()
-    let defaults = UserDefaults.standard
+    var array = [Items]()
+    //let defaults = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let firstItem = Item()
-        firstItem.title = "Apple"
-        array.append(firstItem)
+        print(dataFilePath)
         
+        loadItems()
         
-        if let items = defaults.array(forKey: "ToDoListArray") as? [Item] {
-
-            array = items
-
-        }
-        
-        
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -60,11 +52,11 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let name = array[indexPath.row]
-        print(name)
+        print(name.title)
         
         array[indexPath.row].done = !array[indexPath.row].done
         
-        tableView.reloadData()
+        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -76,8 +68,8 @@ class ToDoListViewController: UITableViewController {
 
         addedOrRemovedItem(titleText: "Successed Removed Item", messageText: array[indexPath.row].title)
         array.remove(at: indexPath.row)
-        self.defaults.set(self.array, forKey: "ToDoListArray")
-        tableView.reloadData()
+        //self.defaults.set(self.array, forKey: "ToDoListArray")
+        saveItems()
         
     }
     
@@ -101,12 +93,15 @@ class ToDoListViewController: UITableViewController {
         // Create an OK Button
         let addAction = UIAlertAction(title: "Add", style: .default) { (_) in
             
-            let newItem = Item()
+            let newItem = Items()
             newItem.title = toDoField.text!
             
             self.array.append(newItem)
-            self.defaults.set(self.array, forKey: "ToDoListArray")
-            self.tableView.reloadData()
+            
+            self.saveItems()
+            
+            //self.defaults.set(self.array, forKey: "ToDoListArray")
+            
             self.addedOrRemovedItem(titleText: "Successed Added Item", messageText: toDoField.text!)
             
         }
@@ -161,6 +156,43 @@ class ToDoListViewController: UITableViewController {
         }
     }
     
+    func saveItems() {
+        
+        let encoder = PropertyListEncoder()
+        
+        do {
+            
+            let data = try encoder.encode(array)
+            
+            try data.write(to: dataFilePath!)
+            
+        } catch {
+            
+            print(error)
+            
+        }
+        
+        self.tableView.reloadData()
+        
+    }
+    
+    func loadItems() {
+        
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            
+            let decoder = PropertyListDecoder()
+           
+            do {
+                
+            array = try decoder.decode([Items].self, from: data)
+                
+            } catch {
+                
+                print(error)
+            }
+        
+        }
+    }
     
 }
 
