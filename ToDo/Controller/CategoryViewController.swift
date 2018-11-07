@@ -25,15 +25,14 @@ class CategoryViewController: UITableViewController {
 
     }
 
-    // MARK: - Table view data source
-
-
+    // MARK: - Table view data source methods
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return categoryArray.count
     }
 
+    
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
@@ -56,6 +55,27 @@ class CategoryViewController: UITableViewController {
         saveCategory()
         
     }
+    
+      // MARK: - Table view delegate methods
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        performSegue(withIdentifier: "goToItems", sender: self)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let destinationVC = segue.destination as! ToDoListViewController
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            
+            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            
+        }
+        
+    }
+    
 
     @IBAction func addCategoryButton(_ sender: UIBarButtonItem) {
         
@@ -63,11 +83,12 @@ class CategoryViewController: UITableViewController {
         
     }
     
+    // MARK: - popFunction
  
     func pop() {
         
-        var toDoField = UITextField()
         
+        var toDoField = UITextField()
         
         let alertController = UIAlertController(title: "Add New To Category", message: "", preferredStyle: .alert)
         
@@ -116,6 +137,7 @@ class CategoryViewController: UITableViewController {
         
     }
     
+    // MARK: - addedOrRemovedItemFunction
     
     func addedOrRemovedItem(titleText: String, messageText: String) {
         
@@ -137,6 +159,8 @@ class CategoryViewController: UITableViewController {
             
         }
     }
+    
+     // MARK: - context Functions
     
     func saveCategory() {
         

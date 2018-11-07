@@ -15,18 +15,29 @@ class ToDoListViewController: UITableViewController {
     
     var alertTimer: Timer?
     var remainingTime = 0
+    
+
     var array = [Item]()
+    
+    var selectedCategory : Category? {
+        didSet{
+            
+            loadItems()
+            
+        }
+        
+    }
+    
     //let defaults = UserDefaults.standard
     //let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //print(dataFilePath!)
         
-        loadItems()
         
     }
     
@@ -98,6 +109,7 @@ class ToDoListViewController: UITableViewController {
             
             newItem.title = toDoField.text!
             newItem.done = false
+            newItem.parentCategory = self.selectedCategory
             
             self.array.append(newItem)
             
@@ -175,9 +187,23 @@ class ToDoListViewController: UITableViewController {
     
     // Function "with" internal and external argument and after "=" we have default argument
     //Item.fetchRequest()) is Item fetch - entity from coreData
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
 
         //let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+
+        if let additionalPredicate = predicate {
+            
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+            
+            
+        } else {
+            
+            request.predicate = categoryPredicate
+            
+        }
+        
         
         do {
             
@@ -188,6 +214,8 @@ class ToDoListViewController: UITableViewController {
             print(error)
             
         }
+        
+        self.tableView.reloadData()
         
     }
     
@@ -201,12 +229,12 @@ extension ToDoListViewController: UISearchBarDelegate {
         
        let request: NSFetchRequest<Item> = Item.fetchRequest()
         
-       request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ means take from searchbar text
+       let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ means take from searchbar text
         // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
         
        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-       loadItems(with: request)
+       loadItems(with: request, predicate: predicate)
         
     }
     
