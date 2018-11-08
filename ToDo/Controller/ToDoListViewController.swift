@@ -27,6 +27,8 @@ class ToDoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -41,6 +43,21 @@ class ToDoListViewController: UITableViewController {
             
             cell.textLabel?.text = item.title
             
+            if item.date == nil {
+
+                cell.detailTextLabel?.text = ""
+
+            } else {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "dd MMM yyyy HH:mm"
+            
+                let result = formatter.string(from: item.date!)
+                
+                cell.detailTextLabel?.text = result
+
+            }
+
+          
             // Ternary operator
             // value = condition ? valueIfTrue : valueIfFalse
             
@@ -129,6 +146,8 @@ class ToDoListViewController: UITableViewController {
                         let newItem = Item()
                         
                         newItem.title = toDoField.text!
+
+                        newItem.date = Date()
                         
                         currentCategory.items.append(newItem)
                         
@@ -187,7 +206,7 @@ class ToDoListViewController: UITableViewController {
     //Item.fetchRequest()) is Item fetch - entity from coreData
     func loadItems() {
 
-        toDoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        toDoItems = selectedCategory?.items.sorted(byKeyPath: "date", ascending: true)
         
         
         self.tableView.reloadData()
@@ -198,36 +217,43 @@ class ToDoListViewController: UITableViewController {
 
 //Mark Extension SearchBarDelegate
 
-//extension ToDoListViewController: UISearchBarDelegate {
-//    
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        
-//       let request: NSFetchRequest<Item> = Item.fetchRequest()
-//        
-//       let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ means take from searchbar text
-//        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
-//        
-//       request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        
-//       loadItems(with: request, predicate: predicate)
-//        
-//    }
-//    
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        
-//        if searchBar.text?.count == 0 {
-//            
-//            loadItems()
-//            
-//            DispatchQueue.main.async {
-//                
-//                searchBar.resignFirstResponder()
-//                
-//            }
-//            
-//        }
-//        
-//    }
-//    
-//}
-//
+extension ToDoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "date", ascending: false)
+       // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
+        tableView.reloadData()
+        
+        
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        searchBySearchBar(searchText: searchText)
+        
+        if searchBar.text?.count == 0 {
+            
+            loadItems()
+            
+            DispatchQueue.main.async {
+                
+                searchBar.resignFirstResponder()
+                
+            }
+            
+        }
+        
+    }
+    
+    func searchBySearchBar(searchText: String) {
+        
+        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
+        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
+        tableView.reloadData()
+        
+    }
+    
+}
+

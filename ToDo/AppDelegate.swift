@@ -27,20 +27,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        data.name = "Filip"
 //        data.age = 12
         
-        do {
-            
-            let realm = try Realm()
-//            try realm.write {
-//                realm.add(data)
-//            }
-        
-        } catch {
-            
-            print(error)
-            
-        }
-        
-      
+//        do {
+//
+//            let realm = try Realm()
+////            try realm.write {
+////                realm.add(data)
+////            }
+//
+//        } catch {
+//
+//            print(error)
+//
+//        }
         
         return true
     }
