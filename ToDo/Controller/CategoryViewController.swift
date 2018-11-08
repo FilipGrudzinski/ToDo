@@ -7,20 +7,19 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    var alertTimer: Timer?
-    var remainingTime = 0
-    var categoryArray = [Category]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm = try! Realm()
+    var categories: Results<Category>?
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-      loadCategory()
+      loadCategories()
         
 
     }
@@ -28,32 +27,42 @@ class CategoryViewController: UITableViewController {
     // MARK: - Table view data source methods
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return categoryArray.count
+        return categories?.count ?? 1 // nil coloasing operator
     }
 
     
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-
-        // Configure the cell...
-        cell.textLabel?.text = categoryArray[indexPath.row].name
-
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories yet"
         return cell
+        
     }
 
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        addedOrRemovedItem(titleText: "Successed Removed Category", messageText: categoryArray[indexPath.row].name!)
+        if let category = categories?[indexPath.row] {
+           
+            addedOrRemovedItem(titleText: "Successed Removed Category", messageText: category.name)
         
-        context.delete(categoryArray[indexPath.row])
-        
-        categoryArray.remove(at: indexPath.row)
-        
-        saveCategory()
-        
+            do {
+                
+                try realm.write {
+                    realm.delete(category)
+                }
+                
+            } catch {
+                
+                print(error)
+                
+            }
+            
+            
+        }
+        tableView.reloadData()
+//
     }
     
       // MARK: - Table view delegate methods
@@ -69,8 +78,8 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! ToDoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+    
+            destinationVC.selectedCategory = categories?[indexPath.row]
             
         }
         
@@ -87,24 +96,15 @@ class CategoryViewController: UITableViewController {
  
     func pop() {
         
-        
         var toDoField = UITextField()
-        
         let alertController = UIAlertController(title: "Add New To Category", message: "", preferredStyle: .alert)
         
         // Create an OK Button
         let addAction = UIAlertAction(title: "Add", style: .default) { (_) in
             
-            
-            let newCategory = Category(context: self.context)
-            
+            let newCategory = Category()
             newCategory.name = toDoField.text!
-           
-            
-            self.categoryArray.append(newCategory)
-            
-            self.saveCategory()
-            
+            self.save(category: newCategory)
             self.addedOrRemovedItem(titleText: "Successed Added Category", messageText: toDoField.text!)
             
         }
@@ -144,30 +144,18 @@ class CategoryViewController: UITableViewController {
         
         let addedOrRemovedItem = UIAlertController(title: titleText, message: messageText, preferredStyle: .alert)
         self.present(addedOrRemovedItem, animated: true, completion: nil)
-        self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: false)
-        
-        
-    }
-    
-    
-    @objc func countDown() {
-        
-        self.remainingTime += 1
-        if (self.remainingTime > 0) {
-            self.alertTimer?.invalidate()
-            self.alertTimer = nil
-            self.dismiss(animated: true, completion: nil)
-            
-        }
+        self.dismiss(animated: true, completion: nil)
     }
     
      // MARK: - context Functions
     
-    func saveCategory() {
+    func save(category: Category) {
         
         do {
             
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
             
         } catch {
             
@@ -179,20 +167,9 @@ class CategoryViewController: UITableViewController {
         
     }
     
-    func loadCategory() {
+    func loadCategories() {
         
-        let reguest: NSFetchRequest<Category> = Category.fetchRequest()
-        
-        do {
-            
-            categoryArray = try context.fetch(reguest)
-            
-        } catch {
-            
-            print(error)
-            
-        }
-        
+        categories = realm.objects(Category.self)
         tableView.reloadData()
         
     }

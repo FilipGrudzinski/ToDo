@@ -21,18 +21,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Print UserDefault path only on simulator
         //print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
         
-        print(Realm.Configuration.defaultConfiguration.fileURL)
-        
-        let data = Data()
-        data.name = "Filip"
-        data.age = 12
+//        print(Realm.Configuration.defaultConfiguration.fileURL)
+//
+//        let data = Data()
+//        data.name = "Filip"
+//        data.age = 12
         
         do {
             
             let realm = try Realm()
-            try realm.write {
-                realm.add(data)
-            }
+//            try realm.write {
+//                realm.add(data)
+//            }
         
         } catch {
             
