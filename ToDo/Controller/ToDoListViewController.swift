@@ -19,8 +19,8 @@ class ToDoListViewController: UITableViewController {
 
     var array = [Item]()
     
-    var selectedCategory : Category? {
-        didSet{
+    var selectedCategory: Category? {
+        didSet{ // run only when category have value
             
             loadItems()
             
@@ -135,6 +135,7 @@ class ToDoListViewController: UITableViewController {
                     // Access the textField object from alertController.addTextField(configurationHandler:) above and get the character count of its non whitespace characters
                     let textCount = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
                     let textIsNotEmpty = textCount > 0
+                    textField.clearButtonMode = UITextField.ViewMode.whileEditing
                     
                     // If the text contains non whitespace characters, enable the OK Button
                     addAction.isEnabled = textIsNotEmpty

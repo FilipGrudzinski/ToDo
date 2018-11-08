@@ -125,6 +125,7 @@ class CategoryViewController: UITableViewController {
                     // Access the textField object from alertController.addTextField(configurationHandler:) above and get the character count of its non whitespace characters
                     let textCount = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
                     let textIsNotEmpty = textCount > 0
+                    textField.clearButtonMode = UITextField.ViewMode.whileEditing
                     
                     // If the text contains non whitespace characters, enable the OK Button
                     addAction.isEnabled = textIsNotEmpty
@@ -143,7 +144,7 @@ class CategoryViewController: UITableViewController {
         
         let addedOrRemovedItem = UIAlertController(title: titleText, message: messageText, preferredStyle: .alert)
         self.present(addedOrRemovedItem, animated: true, completion: nil)
-        self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: true)
+        self.alertTimer = Timer.scheduledTimer(timeInterval: 0.75, target: self, selector: #selector(ToDoListViewController.countDown), userInfo: nil, repeats: false)
         
         
     }
