@@ -57,12 +57,14 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Category" id="hDV-A4-JF1">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="VuP-PH-1a0">
-                            <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="fKR-1H-kUv" id="Jno-f2-pfv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="LB9-Kw-rYh" id="sN8-bf-bjj"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kph-Iw-GPe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -112,8 +114,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jUO-6H-1IG" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="WzW-s0-cyz">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" largeTitles="YES" id="WzW-s0-cyz">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.32549019610000002" green="0.6588235294" blue="0.82352941180000006" alpha="1" colorSpace="calibratedRGB"/>
                         <textAttributes key="titleTextAttributes">
@@ -130,5 +132,4 @@
             <point key="canvasLocation" x="-466" y="54"/>
         </scene>
     </scenes>
-    <color key="tintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

@@ -8,9 +8,12 @@
 
 import UIKit
 import RealmSwift
-
+import ChameleonFramework
 
 class ToDoListViewController: SwipeTableViewController {
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     
     let realm = try! Realm()
     var toDoItems: Results<Item>?
@@ -28,6 +31,28 @@ class ToDoListViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        if let colorHex = selectedCategory?.color {
+            
+            title = selectedCategory!.name
+            
+            guard let navBar = navigationController?.navigationBar else {fatalError()}
+            
+            if let navBarColor = UIColor(hexString: colorHex) {
+                
+                navBar.barTintColor = navBarColor
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                searchBar.barTintColor = navBarColor
+                
+            }
+            
+            
+            
+        }
         
     }
     
@@ -42,6 +67,14 @@ class ToDoListViewController: SwipeTableViewController {
         if let item = toDoItems?[indexPath.row] {
             
             cell.textLabel?.text = item.title
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) {
+                
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+                cell.detailTextLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+                
+            }
+            
             
             if item.date == nil {
 
