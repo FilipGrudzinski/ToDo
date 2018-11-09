@@ -8,64 +8,68 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
+import ChameleonFramework
 
 class CategoryViewController: UITableViewController {
     
     let realm = try! Realm()
     var categories: Results<Category>?
-   
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-      loadCategories()
+        loadCategories()
         
-
+        
     }
-
+    
     // MARK: - Table view data source methods
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories?.count ?? 1 // nil coloasing operator
     }
-
     
-
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories yet"
+        //cell.backgroundColor = HexColor(categories?[indexPath.row].name ?? "#1D9BF6")
+        cell.delegate = self
         return cell
         
     }
-
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if let category = categories?[indexPath.row] {
-           
-            addedOrRemovedItem(titleText: "Successed Removed Category", messageText: category.name)
-        
-            do {
-                
-                try realm.write {
-                    realm.delete(category)
-                }
-                
-            } catch {
-                
-                print(error)
-                
-            }
-            
-            
-        }
-        tableView.reloadData()
-//
-    }
     
-      // MARK: - Table view delegate methods
+    //    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    //
+    //        if let category = categories?[indexPath.row] {
+    //
+    //            addedOrRemovedItem(titleText: "Successed Removed Category", messageText: category.name)
+    //
+    //            do {
+    //
+    //                try realm.write {
+    //                    realm.delete(category)
+    //                }
+    //
+    //            } catch {
+    //
+    //                print(error)
+    //
+    //            }
+    //
+    //
+    //        }
+    //        tableView.reloadData()
+    //        //
+    //    }
+    
+    // MARK: - Table view delegate methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -78,14 +82,14 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! ToDoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-    
+            
             destinationVC.selectedCategory = categories?[indexPath.row]
             
         }
         
     }
     
-
+    
     @IBAction func addCategoryButton(_ sender: UIBarButtonItem) {
         
         pop()
@@ -93,7 +97,7 @@ class CategoryViewController: UITableViewController {
     }
     
     // MARK: - popFunction
- 
+    
     func pop() {
         
         var toDoField = UITextField()
@@ -104,6 +108,7 @@ class CategoryViewController: UITableViewController {
             
             let newCategory = Category()
             newCategory.name = toDoField.text!
+            // newCategory.color = UIColor.randomFlat.hexValue()
             self.save(category: newCategory)
             self.addedOrRemovedItem(titleText: "Successed Added Category", messageText: toDoField.text!)
             
@@ -116,6 +121,9 @@ class CategoryViewController: UITableViewController {
         
         // Add a text field to the alert controller
         alertController.addTextField { (textField) in
+            textField.clearButtonMode = UITextField.ViewMode.whileEditing
+            textField.placeholder = "Add New Category"
+            textField.autocorrectionType = UITextAutocorrectionType.yes
             
             // Observe the UITextFieldTextDidChange notification to be notified in the below block when text is changed
             NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: OperationQueue.main, using:
@@ -125,7 +133,7 @@ class CategoryViewController: UITableViewController {
                     // Access the textField object from alertController.addTextField(configurationHandler:) above and get the character count of its non whitespace characters
                     let textCount = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
                     let textIsNotEmpty = textCount > 0
-                    textField.clearButtonMode = UITextField.ViewMode.whileEditing
+                    
                     
                     // If the text contains non whitespace characters, enable the OK Button
                     addAction.isEnabled = textIsNotEmpty
@@ -147,7 +155,7 @@ class CategoryViewController: UITableViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-     // MARK: - context Functions
+    // MARK: - context Functions
     
     func save(category: Category) {
         
@@ -172,6 +180,48 @@ class CategoryViewController: UITableViewController {
         categories = realm.objects(Category.self)
         tableView.reloadData()
         
+    }
+    
+}
+
+extension CategoryViewController: SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            // handle action by updating model with deletion
+            
+            if let category = self.categories?[indexPath.row] {
+                
+                self.addedOrRemovedItem(titleText: "Successed Removed Category", messageText: category.name)
+                
+                do {
+                    
+                    try self.realm.write {
+                        self.realm.delete(category)
+                    }
+                    
+                } catch {
+                    
+                    print(error)
+                    
+                }
+                
+            }
+        }
+        
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete-icon")
+        
+        return [deleteAction]
+    }
+    
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        return options
     }
     
 }

@@ -57,7 +57,6 @@ class ToDoListViewController: UITableViewController {
 
             }
 
-          
             // Ternary operator
             // value = condition ? valueIfTrue : valueIfFalse
             
@@ -231,7 +230,7 @@ extension ToDoListViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        searchBySearchBar(searchText: searchText)
+       // searchBySearchBar(searchText: searchText)
         
         if searchBar.text?.count == 0 {
             
@@ -247,13 +246,13 @@ extension ToDoListViewController: UISearchBarDelegate {
         
     }
     
-    func searchBySearchBar(searchText: String) {
-        
-        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
-        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
-        tableView.reloadData()
-        
-    }
+//    func searchBySearchBar(searchText: String) {
+//
+//        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
+//        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
+//        tableView.reloadData()
+//
+//    }
     
 }
 
