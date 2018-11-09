@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 
-class ToDoListViewController: UITableViewController {
+class ToDoListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     var toDoItems: Results<Item>?
@@ -37,7 +37,7 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell" , for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = toDoItems?[indexPath.row] {
             
@@ -92,30 +92,6 @@ class ToDoListViewController: UITableViewController {
         
         tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
-        
-    }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if let item = toDoItems?[indexPath.row] {
-            
-            addedOrRemovedItem(titleText: "Successed Removed Item", messageText: item.title)
-            
-            do {
-                
-                try realm.write {
-                    realm.delete(item)
-                }
-                
-            } catch {
-                
-                print(error)
-                
-            }
-            
-        }
-        
-        tableView.reloadData()
         
     }
     
@@ -200,15 +176,35 @@ class ToDoListViewController: UITableViewController {
         
         
     }
-    
-    // Function "with" internal and external argument and after "=" we have default argument
-    //Item.fetchRequest()) is Item fetch - entity from coreData
+
     func loadItems() {
 
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "date", ascending: true)
         
         
         self.tableView.reloadData()
+        
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let item = self.toDoItems?[indexPath.row] {
+            
+            self.addedOrRemovedItem(titleText: "Successed Removed Category", messageText: item.title)
+            
+            do {
+                
+                try self.realm.write {
+                    self.realm.delete(item)
+                }
+                
+            } catch {
+                
+                print(error)
+                
+            }
+            
+        }
         
     }
     
@@ -246,13 +242,13 @@ extension ToDoListViewController: UISearchBarDelegate {
         
     }
     
-//    func searchBySearchBar(searchText: String) {
-//
-//        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
-//        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
-//        tableView.reloadData()
-//
-//    }
+    func searchBySearchBar(searchText: String) {
+
+        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
+        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
+        tableView.reloadData()
+
+    }
     
 }
 

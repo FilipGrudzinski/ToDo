@@ -13,6 +13,7 @@
 		149486262182FD2400B2583F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 149486252182FD2400B2583F /* Assets.xcassets */; };
 		149486292182FD2400B2583F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 149486272182FD2400B2583F /* LaunchScreen.storyboard */; };
 		149486312183C8B700B2583F /* PopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149486302183C8B700B2583F /* PopUp.swift */; };
+		149F52FC219613BC00A1E97A /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149F52FB219613BC00A1E97A /* SwipeTableViewController.swift */; };
 		14E62152219245E600393927 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E62151219245E600393927 /* CategoryViewController.swift */; };
 		14E62156219444EA00393927 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E62155219444EA00393927 /* Item.swift */; };
 		14E62158219444F400393927 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E62157219444F400393927 /* Category.swift */; };
@@ -30,6 +31,7 @@
 		149486282182FD2400B2583F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1494862A2182FD2400B2583F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		149486302183C8B700B2583F /* PopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUp.swift; sourceTree = "<group>"; };
+		149F52FB219613BC00A1E97A /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		14E62151219245E600393927 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		14E62155219444EA00393927 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		14E62157219444F400393927 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				14E62151219245E600393927 /* CategoryViewController.swift */,
 				149486202182FD2200B2583F /* ToDoListViewController.swift */,
+				149F52FB219613BC00A1E97A /* SwipeTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				14E62152219245E600393927 /* CategoryViewController.swift in Sources */,
 				149486212182FD2200B2583F /* ToDoListViewController.swift in Sources */,
 				149486312183C8B700B2583F /* PopUp.swift in Sources */,
+				149F52FC219613BC00A1E97A /* SwipeTableViewController.swift in Sources */,
 				14E62156219444EA00393927 /* Item.swift in Sources */,
 				1494861F2182FD2200B2583F /* AppDelegate.swift in Sources */,
 				14E62158219444F400393927 /* Category.swift in Sources */,
