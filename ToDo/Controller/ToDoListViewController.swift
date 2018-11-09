@@ -35,22 +35,33 @@ class ToDoListViewController: SwipeTableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        guard let navBar = navigationController?.navigationBar else {fatalError()}
-        guard let colorHex = selectedCategory?.color else {fatalError()}
-        
         title = selectedCategory!.name
         
-        guard let navBarColor = UIColor(hexString: colorHex) else {fatalError()}
+        guard let colorHex = selectedCategory?.color else {fatalError()}
+        
+        barUpdate(hexColor: colorHex)
+        
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        
+      barUpdate(hexColor: "1D9BF6")
+        
+    }
+    
+    func barUpdate(hexColor: String) {
+        
+        guard let navBar = navigationController?.navigationBar else {fatalError()}
+        
+        guard let navBarColor = UIColor(hexString: hexColor) else {fatalError()}
         
         navBar.barTintColor = navBarColor
         navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
         navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
         searchBar.barTintColor = navBarColor
-        
+        tableView.backgroundColor = navBarColor
         
         
     }
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDoItems?.count ?? 1
