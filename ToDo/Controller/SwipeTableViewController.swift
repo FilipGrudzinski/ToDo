@@ -55,5 +55,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         
         
     }
+
     
 }

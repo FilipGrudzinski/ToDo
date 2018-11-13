@@ -17,12 +17,14 @@ class ToDoListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     var toDoItems: Results<Item>?
-   
+    
+    
     
     var selectedCategory: Category? {
         didSet{ // run only when category have value
             
             loadItems()
+            
             
         }
         
@@ -31,20 +33,25 @@ class ToDoListViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         
         title = selectedCategory!.name
         
+        
         guard let colorHex = selectedCategory?.color else {fatalError()}
         
         barUpdate(hexColor: colorHex)
         
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         
-      barUpdate(hexColor: "1D9BF6")
+        barUpdate(hexColor: "1D9BF6")
         
     }
     
@@ -55,13 +62,20 @@ class ToDoListViewController: SwipeTableViewController {
         guard let navBarColor = UIColor(hexString: hexColor) else {fatalError()}
         
         navBar.barTintColor = navBarColor
+
         navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
         navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+        
         searchBar.barTintColor = navBarColor
+        searchBar.tintColor = navBarColor
+        let cancelButtonAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes , for: .normal)
+        
         tableView.backgroundColor = navBarColor
         
         
     }
+    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDoItems?.count ?? 1
@@ -69,7 +83,9 @@ class ToDoListViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
         
         if let item = toDoItems?[indexPath.row] {
             
@@ -84,27 +100,23 @@ class ToDoListViewController: SwipeTableViewController {
             
             
             if item.date == nil {
-
+                
                 cell.detailTextLabel?.text = ""
-
+                
             } else {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "dd MMM yyyy HH:mm"
-            
+                
                 let result = formatter.string(from: item.date!)
                 
                 cell.detailTextLabel?.text = result
-
+                
             }
-
+            
             // Ternary operator
             // value = condition ? valueIfTrue : valueIfFalse
             
             cell.accessoryType = item.done ? .checkmark : .none
-            
-        } else {
-            
-            cell.textLabel?.text = "No items Added"
             
         }
         
@@ -161,7 +173,7 @@ class ToDoListViewController: SwipeTableViewController {
                         let newItem = Item()
                         
                         newItem.title = toDoField.text!
-
+                        
                         newItem.date = Date()
                         
                         currentCategory.items.append(newItem)
@@ -187,6 +199,10 @@ class ToDoListViewController: SwipeTableViewController {
         // Add a text field to the alert controller
         alertController.addTextField { (textField) in
             
+            textField.clearButtonMode = UITextField.ViewMode.whileEditing
+            textField.placeholder = "Add New Item"
+            textField.autocorrectionType = UITextAutocorrectionType.yes
+            
             // Observe the UITextFieldTextDidChange notification to be notified in the below block when text is changed
             NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: OperationQueue.main, using:
                 {_ in
@@ -195,7 +211,7 @@ class ToDoListViewController: SwipeTableViewController {
                     // Access the textField object from alertController.addTextField(configurationHandler:) above and get the character count of its non whitespace characters
                     let textCount = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
                     let textIsNotEmpty = textCount > 0
-                    textField.clearButtonMode = UITextField.ViewMode.whileEditing
+                    
                     
                     // If the text contains non whitespace characters, enable the OK Button
                     addAction.isEnabled = textIsNotEmpty
@@ -206,7 +222,7 @@ class ToDoListViewController: SwipeTableViewController {
         }
         present(alertController, animated: true, completion: nil)
         
-}
+    }
     
     func addedOrRemovedItem(titleText: String, messageText: String) {
         
@@ -216,9 +232,9 @@ class ToDoListViewController: SwipeTableViewController {
         
         
     }
-
+    
     func loadItems() {
-
+        
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "date", ascending: true)
         
         
@@ -255,40 +271,71 @@ class ToDoListViewController: SwipeTableViewController {
 extension ToDoListViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        searchBySearchBar(searchText: searchBar.text!)
+        
+        DispatchQueue.main.async {
+            
+            searchBar.resignFirstResponder()
+            
+        }
+        
+    }
 
-        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "date", ascending: false)
-       // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
-        tableView.reloadData()
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         
-        
+        searchBar.showsCancelButton = true
         
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-       // searchBySearchBar(searchText: searchText)
         
-        if searchBar.text?.count == 0 {
+        searchBySearchBar(searchText: searchText)
+        
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        resetSearchBar(holder: "Search")
+        
+        searchBar.showsCancelButton = false
+        
+        DispatchQueue.main.async {
             
-            loadItems()
+            searchBar.resignFirstResponder()
             
-            DispatchQueue.main.async {
-                
-                searchBar.resignFirstResponder()
-                
-            }
+        }
+    }
+    
+    
+    func searchBySearchBar(searchText: String) {
+        
+        
+        let textCount = searchBar.text?.trimmingCharacters(in: .whitespaces).count ?? 0
+        if textCount > 0 {
+            
+            toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
+            // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
+            tableView.reloadData()
+            
+        } else {
+            
+            resetSearchBar(holder: "Search")
             
         }
         
     }
     
-    func searchBySearchBar(searchText: String) {
-
-        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
-        // [c] case insensitive: lowercase & uppercase values are treated the same // [d] diacritic insensitive: special characters treated as the base character
+    func resetSearchBar(holder: String) {
+        
+        searchBar.text = ""
+        searchBar.placeholder = holder
+        loadItems()
         tableView.reloadData()
-
     }
+    
     
 }
 
